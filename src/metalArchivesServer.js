@@ -8,6 +8,7 @@ var mod = (function(){
   const Song = require('./models/song');
   const Lyrics = require('./models/lyrics');
   const SongSearch = require('./models/songSearch');
+  const Recommendation = require('./models/Recommendation');
 
   const classMap = {
     Album:Album,
@@ -17,7 +18,8 @@ var mod = (function(){
     Label:Label,
     Song:Song,
     SongSearch:SongSearch,
-    Lyrics:Lyrics
+    Lyrics:Lyrics,
+    Recommendation:Recommendation
   };
 
   async function _parseResults(results,modelLabel,primaryKeyLabel){
@@ -75,7 +77,10 @@ var mod = (function(){
       metalArchives.searchSong(req.params.title).then((results)=>{res.send(results);}).catch((error)=>{res.send({error:'No Results'});});
     },
     getDiscography:function(req,res,next){
-      metalArchives.getDiscography(req.params.artistId).then((results)=>{res.send(results);}).catch((error)=>{res.send({error:'No Results'});});
+      metalArchives.getDiscography(req.params.artistId).then((results)=>{
+        _parseResults(results,'AlbumSearch','id');
+        res.send(results);
+      }).catch((error)=>{res.send({error:'No Results'});});
     },
     getRecommendations:function(req,res,next){
       metalArchives.getSimilarArtists(req.params.artistId).then((results)=>{res.send(results);}).catch((error)=>{res.send({error:'No Results'});});

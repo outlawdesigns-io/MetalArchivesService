@@ -87,7 +87,7 @@ var mod = (function(){
     },
     getLyrics:function(req,res,next){
       metalArchives.getLyrics(req.params.songId).then((results)=>{
-        _parseResults({id:req.params.songId,body:results.replace(/'/g,"''")},'Lyrics','id');
+        _parseResults({id:req.params.songId,body:results},'Lyrics','id');
         res.send(results);
       }).catch((error)=>{res.send({error:'No Results'});});
     },

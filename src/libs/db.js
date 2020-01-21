@@ -36,9 +36,9 @@ class Db{
         var max = Object.keys(updateObj).length - 1;
         for(value in updateObj){
             if(i++ < max){
-                this.query += value + '=' + "\'" + updateObj[value] + "\',";
+                this.query += value + '=' + "\'" + updateObj[value].replace(/'/g,"''") + "\',";
             }else{
-                this.query += value + '=' + "\'" + updateObj[value] + "\'";
+                this.query += value + '=' + "\'" + updateObj[value].replace(/'/g,"''") + "\'";
             }
         }
         return this;
@@ -61,9 +61,9 @@ class Db{
         var value;
         for(value in insertObj){
             if(i++ < max){
-                this.query += "\'" + insertObj[value] + "\',";
+                this.query += "\'" + insertObj[value].replace(/'/g,"''") + "\',";
             }else{
-                this.query += "\'" + insertObj[value] + "\')";
+                this.query += "\'" + insertObj[value].replace(/'/g,"''") + "\')";
             }
         }
         return this;

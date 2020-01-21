@@ -28,7 +28,7 @@ var mod =  (function(){
     trackLength_inLine:/<td align="right">([0-9]{2}:[0-9]{2})<\/td>/,
     albumId:/var\sreleaseId\s=\s([0-9]{1,20})/,
     artist:/<h2\sclass="band_name">\n<a href=.*?>(.*?)<\/a>/,
-    releaseType:/<dt>Type:<\/dt>\n<dd>(.*?)<\/dd>/,
+    releaseType:/<dt>Type:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
     releaseDate:/<dt>Release date:<\/dt>\n<dd>(.*?)<\/dd>/,
     recordLabel:/<dt>Label:<\/dt>\n<dd><a href=.*?>(.*?)<\/a><\/dd>/,
     independentLabel:/<dt>Label:<\/dt>\n<dd>(.*?)<\/dd>/

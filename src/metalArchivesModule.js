@@ -30,7 +30,8 @@ var mod =  (function(){
     artist:/<h2\sclass="band_name">\n<a href=.*?>(.*?)<\/a>/,
     releaseType:/<dt>Type:<\/dt>\n<dd>(.*?)<\/dd>/,
     releaseDate:/<dt>Release date:<\/dt>\n<dd>(.*?)<\/dd>/,
-    recordLabel:/<dt>Label:<\/dt>\n<dd><a href=.*?>(.*?)<\/a><\/dd>/
+    recordLabel:/<dt>Label:<\/dt>\n<dd><a href=.*?>(.*?)<\/a><\/dd>/,
+    independentLabel:/<dt>Label:<\/dt>\n<dd>(.*?)<\/dd>/
   };
   const albumSearchPatterns = {
     artist_album:/<a href=.*?>(.*?)<\/a>/,
@@ -169,7 +170,11 @@ var mod =  (function(){
     results['artist'] = htmlStr.match(albumPatterns.artist)[1];
     results['releaseType'] = htmlStr.match(albumPatterns.releaseType)[1];
     results['releaseDate'] = htmlStr.match(albumPatterns.releaseDate)[1];
-    results['recordLabel'] = htmlStr.match(albumPatterns.recordLabel)[1];
+    if(htmlStr.match(albumPatterns.recordLabel)){
+      results['recordLabel'] = htmlStr.match(albumPatterns.recordLabel)[1];
+    }else{
+      results['recordLabel'] = htmlStr.match(albumPatterns.independentLabel)[1];
+    }
     results['songs'] = _parseTracks(htmlStr);
     return results;
   }
@@ -312,10 +317,10 @@ var mod =  (function(){
       return new Promise((resolve,reject)=>{
         let uri;
         let expectingJson = false;
-        if(artist !== undefined){
-          uri = "albums/" + artist.replace(/\s/g,"_") + "/" + album.replace(/\s/g,"_");
-        }else if(albumId !== undefined){
+        if(albumId !== undefined){
           uri = "albums/" + artist.replace(/\s/g,"_") + "/" + album.replace(/\s/g,"_") + "/" + albumId;
+        }else if(artist !== undefined){
+          uri = "albums/" + artist.replace(/\s/g,"_") + "/" + album.replace(/\s/g,"_");
         }else{
           uri = "search/ajax-album-search/?field=title&query=" + album.replace(/\s/g,"+");
           expectingJson = true;

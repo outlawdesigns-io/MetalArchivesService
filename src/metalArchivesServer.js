@@ -35,7 +35,7 @@ var mod = (function(){
           model = await model._create().catch(console.error);
         }
       });
-    }else{
+    }else if(results[primaryKeyLabel]){
       let modelExists = await classMap[modelLabel].recordExists(results[primaryKeyLabel]).catch(console.error);
       if(!modelExists){
         let model = new classMap[modelLabel];
@@ -49,6 +49,8 @@ var mod = (function(){
         results.songs.forEach((song)=>{song.albumId = results[primaryKeyLabel]});
         _parseResults(results.songs,'Song','id');
       }
+    }else{
+      //empty array or invalid obj. You might want to do something here
     }
   }
 

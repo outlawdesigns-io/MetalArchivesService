@@ -17,7 +17,7 @@ class Lyrics extends Record{
   static recordExists(id){
     return new Promise((resolve,reject)=>{
       let lyrics = new Lyrics();
-      lyrics.db.table(lyrics.table).select(lyrics.primaryKey).where(lyrics.primaryKey + ' = ' + id).execute().then((data)=>{
+      lyrics.db.table(lyrics.table).select(lyrics.primaryKey).where(lyrics.primaryKey + ' = ' + "'" + id + "'").execute().then((data)=>{
         if(!data.length){
           resolve(false);
         }

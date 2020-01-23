@@ -20,8 +20,8 @@ var mod =  (function(){
     location:/<\/strong>\sfrom\s(.*)/
   };
   const albumPatterns = {
-    tracks_global:/([0-9]{1,3})\.<\/td>\n<td\sclass="wrapWords(.*?)">\n(.*?)\n<\/td>/g,
-    track_inLine:/([0-9]{1,3})\.<\/td>\n<td\sclass="wrapWords(.*?)">\n(.*?)\n<\/td>/,
+    tracks_global:/([0-9]{1,3})\.<\/td>\n<td\sclass="wrapWords.*?">\n(.*?)\n<\/td>/g,
+    track_inLine:/([0-9]{1,3})\.<\/td>\n<td\sclass="wrapWords.*?">\n(.*?)\n<\/td>/,
     songId_global:/<tr id="song(.*?)"/g,
     songId_inLine:/<tr id="song(.*?)"/,
     trackLength_global:/<td align="right">([0-9]{2}:[0-9]{2})<\/td>/g,

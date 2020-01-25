@@ -328,6 +328,9 @@ var mod =  (function(){
         _apiRequest(uri).then((htmlStr)=>{
           if(expectingJson){
             resolve(_parseAlbumResults(JSON.parse(htmlStr)));
+          }else if(_hasMultipleResults(htmlStr)){
+            //how to handle htmlStr based multiple results
+            resolve({error:'Unable to handle results'});
           }else{
             resolve(_parseAlbumData(htmlStr));
           }

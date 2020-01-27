@@ -20,7 +20,7 @@ class Song extends Record{
   static recordExists(id){
     return new Promise((resolve,reject)=>{
       let song = new Song();
-      song.db.table(song.table).select(song.primaryKey).where(song.primaryKey + ' = ' + id).execute().then((data)=>{
+      song.db.table(song.table).select(song.primaryKey).where(song.primaryKey + " = '" + id + "'").execute().then((data)=>{
         if(!data.length){
           resolve(false);
         }

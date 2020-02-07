@@ -30,7 +30,7 @@ var mod =  (function(){
     artist:/<h2\sclass="band_name">\n<a href=.*?>(.*?)<\/a>/,
     releaseType:/<dt>Type:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
     releaseDate:/<dt>Release date:<\/dt>\n<dd>(.*?)<\/dd>/,
-    recordLabel:/<dt>Label:<\/dt>\n<dd><a href=.*?>(.*?)<\/a><\/dd>/,
+    recordLabel:/<dt>Label:<\/dt>\n\s?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
     independentLabel:/<dt>Label:<\/dt>\n<dd>(.*?)<\/dd>/
   };
   const albumSearchPatterns = {
@@ -84,6 +84,7 @@ var mod =  (function(){
   const multipleResultPattern = /"\smay\srefer\sto:/;
   const tagPattern = /(<([^>]+)>)/ig;
   function _apiRequest(uri){
+    console.log(uri);
     return new Promise((resolve,reject)=>{
       let options = {
         url:host + '/' + uri,

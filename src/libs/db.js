@@ -1,18 +1,19 @@
 "use strict";
+
 var mysql = require('mysql');
-var instance = null;
+
+var con = null;
+
 class Db{
   constructor(host,user,password,database){
-    if(!instance){
-      instance = this;
-    }
     this.host = host;
     this.user = user;
     this.password = password;
     this.database = database;
-    this.con = mysql.createConnection({host:this.host,user:this.user,password:this.password});
+    if(!con){
+      con = mysql.createConnection({host:this.host,user:this.user,password:this.password});
+    }
     this.query = '';
-    return instance;
   }
   createInstance(host,user,password,database){
     let object = new Db(host,user,password,database);
@@ -89,16 +90,11 @@ class Db{
   }
   execute(){
     return new Promise((resolve,reject)=>{
-      this.con = mysql.createConnection({host:this.host,user:this.user,password:this.password});
-      this.con.query(this.query,(err,rows)=>{
+      con.query(this.query,(err,rows)=>{
         if(err){
           return reject(err);
         }else{
-          this.close().then(()=>{
-            resolve(rows);
-          },(err)=>{
-            reject(err);
-          });
+          resolve(rows);
         }
       })
     });

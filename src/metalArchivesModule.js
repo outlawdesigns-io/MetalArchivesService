@@ -20,8 +20,8 @@ var mod =  (function(){
     location:/<\/strong>\sfrom\s(.*)/
   };
   const albumPatterns = {
-    tracks_global:/([0-9]{1,3})\.<\/td>\n<td\sclass="wrapWords.*?">\n(.*?)\n<\/td>/g,
-    track_inLine:/([0-9]{1,3})\.<\/td>\n<td\sclass="wrapWords.*?">\n(.*?)\n<\/td>/,
+    tracks_global:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n<\/td>/g,
+    track_inLine:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n<\/td>/,
     songId_global:/<tr id="song(.*?)"/g,
     songId_inLine:/<tr id="song(.*?)"/,
     trackLength_global:/<td align="right">([0-9]{2}:[0-9]{2})<\/td>/g,
@@ -84,7 +84,7 @@ var mod =  (function(){
   const multipleResultPattern = /"\smay\srefer\sto:/;
   const tagPattern = /(<([^>]+)>)/ig;
   function _apiRequest(uri){
-    console.log(uri);
+    //console.log(uri);
     return new Promise((resolve,reject)=>{
       let options = {
         url:host + '/' + uri,
@@ -187,6 +187,7 @@ var mod =  (function(){
       tracks.push({track_number:track[1],title:track[2]});
     }
     lines = htmlStr.match(albumPatterns.songId_global);
+    console.log(tracks);
     for(i in lines){
       tracks[i].id = lines[i].match(albumPatterns.songId_inLine)[1];
     }

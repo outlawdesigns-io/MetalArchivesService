@@ -11,18 +11,17 @@ class Record{
         this.id = id;
         this.db = new database(config.DBHOST,config.DBUSER,config.DBPASS,this.database);
     }
-    _build(){
-        return new Promise((resolve,reject)=>{
-            this.db.table(this.table).select('*').where(this.primaryKey + "= '" + this.id + "'").execute().then((data)=>{
-                let keys = Object.keys(data[0]);
-                keys.forEach((key)=>{
-                    this[key] = data[0][key];
-                });
-                resolve(data[0]);
-            },(err)=>{
-                reject(err);
-            });
+    async _build(){
+      try{
+        let data = await this.db.table(this.table).select('*').where(this.primaryKey + "= '" + this.id + "'").execute();
+        let keys = Object.keys(data[0]);
+        keys.forEach((key)=>{
+          this[key] = data[0][key];
         });
+      }catch(err){
+        throw err;
+      }
+      return this;
     }
     _buildPublicObj(){
         let obj = {};
@@ -37,47 +36,33 @@ class Record{
         });
         return obj;
     }
-    _update(){
-        return new Promise((resolve,reject)=>{
-            let update = this._buildPublicObj();
-            this.db.table(this.table).update(update).where(this.primaryKey + "= '" + this.id + "'").execute().then((data)=>{
-                this._build().then((data)=>{
-                    resolve(this);
-                },(err)=>{
-                    reject(err);
-                });
-            },(err)=>{
-                reject(err);
-            });
-        });
+    async _update(){
+      let update = this._buildPublicObj();
+      try{
+        let result = await this.db.table(this.table).update(update).where(this.primaryKey + "= '" + this.id + "'").execute();
+        return this._build();
+      }catch(err){
+        throw err;
+      }
     }
-    _create(){
-        return new Promise((resolve,reject)=>{
-            let insertion = this._buildPublicObj();
-            this.db.table(this.table).insert(insertion).execute().then((data)=>{
-                this._getId().then((lastId)=>{
-                    this.id = lastId[0][this.primaryKey];
-                    this._build().then((data)=>{
-                        resolve(this);
-                    },(err)=>{
-                        reject(err);
-                    });
-                },(err)=>{
-                    reject(err);
-                });
-            },(err)=>{
-                reject(err);
-            });
-        });
+    async _create(){
+      let insertion = this._buildPublicObj();
+      try{
+        await this.db.table(this.table).insert(insertion).execute();
+        let lastId = await this._getId();
+        this.id = lastId[0][this.primaryKey];
+         await this._build();
+         return this;
+      }catch(err){
+        throw err;
+      }
     }
-    _getId(){
-        return new Promise((resolve,reject)=>{
-            this.db.table(this.table).select(this.primaryKey).orderBy(this.primaryKey + " desc limit 1").execute().then((data)=>{
-                resolve(data);
-            },(err)=>{
-                reject(err);
-            });
-        });
+    async _getId(){
+      try{
+        return await this.db.table(this.table).select(this.primaryKey).orderBy(this.primaryKey + " desc limit 1").execute();
+      }catch(err){
+        throw err;
+      }
     }
     static _getTehDate(){
         var dateObj = new Date();

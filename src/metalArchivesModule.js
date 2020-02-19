@@ -20,8 +20,8 @@ var mod =  (function(){
     location:/<\/strong>\sfrom\s(.*)/
   };
   const albumPatterns = {
-    tracks_global:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n<\/td>/g,
-    track_inLine:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n<\/td>/,
+    tracks_global:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n\s?<\/td>/g,
+    track_inLine:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n\s?<\/td>/,
     songId_global:/<tr id="song(.*?)"/g,
     songId_inLine:/<tr id="song(.*?)"/,
     trackLength_global:/<td align="right">([0-9]{2}:[0-9]{2})<\/td>/g,
@@ -29,7 +29,7 @@ var mod =  (function(){
     albumId:/var\sreleaseId\s=\s([0-9]{1,20})/,
     artist:/<h2\sclass="band_name">\n<a href=.*?>(.*?)<\/a>/,
     releaseType:/<dt>Type:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
-    releaseDate:/<dt>Release date:<\/dt>\n<dd>(.*?)<\/dd>/,
+    releaseDate:/<dt>Release date:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
     recordLabel:/<dt>Label:<\/dt>\n\s?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
     independentLabel:/<dt>Label:<\/dt>\n<dd>(.*?)<\/dd>/
   };

@@ -187,7 +187,6 @@ var mod =  (function(){
       tracks.push({track_number:track[1],title:track[2]});
     }
     lines = htmlStr.match(albumPatterns.songId_global);
-    console.log(tracks);
     for(i in lines){
       tracks[i].id = lines[i].match(albumPatterns.songId_inLine)[1];
     }

@@ -4,14 +4,14 @@ var mod =  (function(){
   const artistPatterns = {
     artistId:/var\sbandId\s=\s([0-9]{1,20})/,
     artistName:/<h1 class="band_name"><a href=.*?>(.*?)<\/a>/,
-    countryOfOrigin:/<dt>Country of origin:<\/dt>\n<dd><a href=.*?>(.*?)<\/a><\/dd>/,
-    location:/<dt>Location:<\/dt>\n<dd>(.*?)<\/dd>/,
+    countryOfOrigin:/<dt>Country of origin:<\/dt>\n\s?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
+    location:/<dt>Location:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
     status:/<dd class=".*?">(.*?)<\/dd>/,
-    formedIn:/<dt>Formed in:<\/dt>\n<dd>(.*?)<\/dd>/,
-    genre:/<dt>Genre:<\/dt>\n<dd>(.*?)<\/dd>/,
-    lyricalThemes:/<dt>Lyrical themes:<\/dt>\n<dd>(.*?)<\/dd>/,
-    recordLabel:/<dt>.*?label:<\/dt>\n<dd><a href=.*?>(.*?)<\/a><\/dd>/,
-    recordLabel2:/<dt>.*?label:<\/dt>\n<dd>(.*?)<\/dd>/
+    formedIn:/<dt>Formed in:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
+    genre:/<dt>Genre:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
+    lyricalThemes:/<dt>Lyrical themes:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
+    recordLabel:/<dt>.*?label:<\/dt>\n\s?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
+    recordLabel2:/<dt>.*?label:<\/dt>\n\s?<dd>(.*?)<\/dd>/
   };
   const artistSearchPatterns = {
     artistId:/<a href=".*?\/([0-9]{1,20})/,

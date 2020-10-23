@@ -7,7 +7,7 @@ class Song extends Record{
   constructor(id){
     const database = 'MetalArchives';
     const table = 'Song';
-    const primaryKey = 'Id';
+    const primaryKey = 'id';
     super(database,table,primaryKey,id);
     this.publicKeys = [
       'id',
@@ -27,6 +27,10 @@ class Song extends Record{
         resolve(true);
       }).catch(reject);
     });
+  }
+  static search(title){
+    let song = new Song();
+    return song.db.table(song.table).select('*').where("title like '%" + title + "%'").execute()
   }
 }
 

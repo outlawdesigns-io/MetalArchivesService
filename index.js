@@ -28,12 +28,15 @@ app.get('/recommendation/:artistId',maServer.getRecommendations);
 app.get('/roster/:labelId/:past?',maServer.getRoster);
 
 
-https.createServer({
-  key: fs.readFileSync(config.SSLKEYPATH),
-  cert: fs.readFileSync(config.SSLCERTPATH)
-},app).listen(config.LIVEPORT,()=>{
-  console.log('Listening on port: ' + config.LIVEPORT);
-});
-// app.listen(PORT,()=>{
-//   console.log('Listening on port: ' + PORT);
-// });
+if(config.DEBUG){
+  app.listen(config.TESTPORT,()=>{
+    console.log('Listening on port: ' + config.TESTPORT);
+  });
+}else{
+  https.createServer({
+    key: fs.readFileSync(config.SSLKEYPATH),
+    cert: fs.readFileSync(config.SSLCERTPATH)
+  },app).listen(config.LIVEPORT,()=>{
+    console.log('Listening on port: ' + config.LIVEPORT);
+  });
+}

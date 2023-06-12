@@ -134,7 +134,6 @@ var mod =  (function(){
     return results;
   }
   function _parseArtistData(htmlStr){
-    console.log(htmlStr.match(artistPatterns.lyricalThemes));
     let results = {};
     results['id'] = htmlStr.match(artistPatterns.artistId)[1];
     results['artist'] = htmlStr.match(artistPatterns.artistName)[1];

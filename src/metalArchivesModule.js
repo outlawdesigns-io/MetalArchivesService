@@ -9,7 +9,7 @@ var mod =  (function(){
     status:/<dd class=".*?">(.*?)<\/dd>/,
     formedIn:/<dt>Formed in:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
     genre:/<dt>Genre:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
-    lyricalThemes:/<dt>Lyrical themes:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
+    lyricalThemes:/<dt>Themes:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
     recordLabel:/<dt>.*?label:<\/dt>\n\s?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
     recordLabel2:/<dt>.*?label:<\/dt>\n\s?<dd>(.*?)<\/dd>/
   };
@@ -134,6 +134,7 @@ var mod =  (function(){
     return results;
   }
   function _parseArtistData(htmlStr){
+    console.log(htmlStr.match(artistPatterns.lyricalThemes));
     let results = {};
     results['id'] = htmlStr.match(artistPatterns.artistId)[1];
     results['artist'] = htmlStr.match(artistPatterns.artistName)[1];

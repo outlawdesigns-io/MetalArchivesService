@@ -94,8 +94,12 @@ var mod =  (function(){
           resolve(body);
         }else if(body['error']){
           reject(body.error);
-        }else{
+        }else if(err){
           reject(err);
+        }else if(res.statusCode == 404){
+          reject('No Results');
+        }else{
+          reject(body);
         }
       });
     });

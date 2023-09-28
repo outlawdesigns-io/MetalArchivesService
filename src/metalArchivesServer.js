@@ -65,7 +65,7 @@ var mod = (function(){
         let model = (results.length) ? 'ArtistSearch':'Artist';
         _parseResults(results,model,'id').catch(console.error);
         res.send(results);
-      }).catch((error)=>{console.log(error);res.send({error:'No Results'});});
+      }).catch((error)=>{res.send({error:error});});
     },
     searchAlbum:function(req,res,next){
       metalArchives.searchAlbum(req.params.albumStr,req.params.artist,req.params.albumId).then(async(results)=>{
@@ -73,7 +73,7 @@ var mod = (function(){
         let primaryKeyLabel = (results.length) ? 'albumId':'id';
         _parseResults(results,model,primaryKeyLabel);
         res.send(results);
-      }).catch((error)=>{console.log(error);res.send({error:'No Results'});});
+      }).catch((error)=>{res.send({error:error});});
     },
     searchSong:function(req,res,next){
       metalArchives.searchSong(req.params.title).then((results)=>{res.send(results);}).catch((error)=>{res.send({error:'No Results'});});
@@ -82,7 +82,7 @@ var mod = (function(){
       metalArchives.getDiscography(req.params.artistId).then((results)=>{
         _parseResults(results,'AlbumSearch','id');
         res.send(results);
-      }).catch((error)=>{res.send({error:'No Results'});});
+      }).catch((error)=>{res.send({error:error});});
     },
     getRecommendations:function(req,res,next){
       metalArchives.getSimilarArtists(req.params.artistId).then((results)=>{res.send(results);}).catch((error)=>{res.send({error:'No Results'});});
@@ -91,13 +91,13 @@ var mod = (function(){
       metalArchives.getLyrics(req.params.songId).then((results)=>{
         _parseResults({id:req.params.songId,body:results},'Lyrics','id');
         res.send(results);
-      }).catch((error)=>{res.send({error:'No Results'});});
+      }).catch((error)=>{res.send({error:error});});
     },
     searchLabel:function(req,res,next){
       metalArchives.searchLabel(req.params.label).then(async(results)=>{
         _parseResults(results,'Label','id');
         res.send(results);
-      }).catch((error)=>{res.send({error:'No Results'});});
+      }).catch((error)=>{res.send({error:error});});
     },
     getRoster:function(req,res,next){
       metalArchives.getLabelRoster(req.params.labelId,req.params.past).then((results)=>{res.send(results);}).catch((error)=>{res.send({error:'No Results'});});

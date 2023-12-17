@@ -8,7 +8,15 @@ const maServer = require('./src/metalArchivesServer');
 const config = require('./src/config');
 
 /*Config*/
-app.use(require('morgan')('combined'));
+//app.use(require('morgan')('combined'));
+var morgan = require('morgan');
+morgan.token('date', function() {
+  var p = new Date().toString().replace(/[A-Z]{3}\+/,'+').split(/ /);
+  return( p[2]+'/'+p[1]+'/'+p[3]+':'+p[4]+' '+p[5].replace('GMT','') );
+});
+app.use(morgan());
+
+
 app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 app.use((req,res,next)=>{

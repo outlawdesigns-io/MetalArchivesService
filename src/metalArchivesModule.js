@@ -20,6 +20,7 @@ var mod =  (function(){
     location:/<\/strong>\sfrom\s(.*)/
   };
   const albumPatterns = {
+    //tracks_global:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n\s?<\/td>/g, //intentionally broken
     tracks_global:/([0-9]{1,3})\.<\/td>\n\s+?<td\sclass="wrapWords.*?">\n(.*?)\n\s+?<\/td>/g,
     track_inLine:/([0-9]{1,3})\.<\/td>\n\s+?<td\sclass="wrapWords.*?">\n(.*?)\n\s+?<\/td>/,
     songId_global:/<tr id="song(.*?)"/g,
@@ -83,6 +84,9 @@ var mod =  (function(){
   };
   const multipleResultPattern = /"\smay\srefer\sto:/;
   const tagPattern = /(<([^>]+)>)/ig;
+  function _throwMatchError(fieldName,pattern){
+    throw new Error(`Unable to match field: ${fieldName} | ${pattern}`);
+  }
   function _apiRequest(uri){
     //console.log(uri);
     return new Promise((resolve,reject)=>{
@@ -139,18 +143,18 @@ var mod =  (function(){
   }
   function _parseArtistData(htmlStr){
     let results = {};
-    results['id'] = htmlStr.match(artistPatterns.artistId)[1];
-    results['artist'] = htmlStr.match(artistPatterns.artistName)[1];
-    results['country'] = htmlStr.match(artistPatterns.countryOfOrigin)[1];
-    results['city'] = htmlStr.match(artistPatterns.location)[1];
-    results['status'] = htmlStr.match(artistPatterns.status)[1];
-    results['formed'] = htmlStr.match(artistPatterns.formedIn)[1];
-    results['genre'] = htmlStr.match(artistPatterns.genre)[1];
-    results['lyricalThemes'] = htmlStr.match(artistPatterns.lyricalThemes)[1];
+    results['id'] = htmlStr.match(artistPatterns.artistId)?.[1] ?? _throwMatchError('Artist.Id',artistPatterns.artistId);
+    results['artist'] = htmlStr.match(artistPatterns.artistName)?.[1] ?? _throwMatchError('Artist.Artist',artistPatterns.artistName);
+    results['country'] = htmlStr.match(artistPatterns.countryOfOrigin)?.[1] ?? _throwMatchError('Artist.',artistPatterns.countryOfOrigin);
+    results['city'] = htmlStr.match(artistPatterns.location)?.[1] ?? _throwMatchError('Artist.',artistPatterns.location);
+    results['status'] = htmlStr.match(artistPatterns.status)?.[1] ?? _throwMatchError('Artist.',artistPatterns.status);
+    results['formed'] = htmlStr.match(artistPatterns.formedIn)?.[1] ?? _throwMatchError('Artist.',artistPatterns.formedIn);
+    results['genre'] = htmlStr.match(artistPatterns.genre)?.[1] ?? _throwMatchError('Artist.',artistPatterns.genre);
+    results['lyricalThemes'] = htmlStr.match(artistPatterns.lyricalThemes)?.[1] ?? _throwMatchError('Artist.',artistPatterns.lyricalThemes);
     if(htmlStr.match(artistPatterns.recordLabel) === null){
-      results['label'] = htmlStr.match(artistPatterns.recordLabel2)[1];
+      results['label'] = htmlStr.match(artistPatterns.recordLabel2)?.[1] ?? _throwMatchError('Artist.Label',artistPatterns.recordLabel2);
     }else{
-      results['label'] = htmlStr.match(artistPatterns.recordLabel)[1];
+      results['label'] = htmlStr.match(artistPatterns.recordLabel)?.[1] ?? _throwMatchError('Artist.Label',artistPatterns.recordLabel);
     }
     return results;
   }
@@ -171,20 +175,16 @@ var mod =  (function(){
   }
   function _parseAlbumData(htmlStr){
     let results = {};
-    try{
-      results['id'] = htmlStr.match(albumPatterns.albumId)[1];
-      results['artist'] = htmlStr.match(albumPatterns.artist)[1];
-      results['releaseType'] = htmlStr.match(albumPatterns.releaseType)[1];
-      results['releaseDate'] = htmlStr.match(albumPatterns.releaseDate)[1];
-      if(htmlStr.match(albumPatterns.recordLabel)){
-        results['recordLabel'] = htmlStr.match(albumPatterns.recordLabel)[1];
-      }else{
-        results['recordLabel'] = htmlStr.match(albumPatterns.independentLabel)[1];
-      }
-      results['songs'] = _parseTracks(htmlStr);
-    }catch(err){
-      throw err.message;
+    results['id'] = htmlStr.match(albumPatterns.albumId)?.[1] ?? _throwMatchError('Album.Id',albumPatterns.albumId);
+    results['artist'] = htmlStr.match(albumPatterns.artist)?.[1] ?? _throwMatchError('Album.Artist',albumPatterns.artist);
+    results['releaseType'] = htmlStr.match(albumPatterns.releaseType)?.[1] ?? _throwMatchError('Album.ReleaseType',albumPatterns.releaseType);
+    results['releaseDate'] = htmlStr.match(albumPatterns.releaseDate)?.[1] ?? _throwMatchError('Album.ReleaseDate',albumPatterns.releaseDate);
+    if(htmlStr.match(albumPatterns.recordLabel)){
+      results['recordLabel'] = htmlStr.match(albumPatterns.recordLabel)?.[1] ?? _throwMatchError('Album.RecordLabel',albumPatterns.recordLabel);
+    }else{
+      results['recordLabel'] = htmlStr.match(albumPatterns.independentLabel)?.[1] ?? _throwMatchError('Album.RecordLabel',albumPatterns.independentLabel);
     }
+    results['songs'] = _parseTracks(htmlStr);
     return results;
   }
   function _parseTracks(htmlStr){
@@ -318,9 +318,8 @@ var mod =  (function(){
           }else{
             resolve(_parseArtistData(htmlStr));
           }
-        },reject).catch(reject);
+        }).catch(reject);
       });
-      return _apiRequest(artist);
     },
     searchAlbum:function(album,artist,albumId){
       return new Promise((resolve,reject)=>{
@@ -343,7 +342,9 @@ var mod =  (function(){
           }else{
             resolve(_parseAlbumData(htmlStr));
           }
-        },reject).catch(reject);
+        }).catch((err)=>{
+          reject(err.message);
+        });
       });
     },
     searchSong:function(title){
@@ -363,7 +364,7 @@ var mod =  (function(){
         let uri = 'band/discography/id/' + artistId + '/tab/all';
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseDiscography(htmlStr));
-        },reject).catch(reject);
+        }).catch(reject);
       });
     },
     getSimilarArtists:function(artistId){
@@ -371,7 +372,7 @@ var mod =  (function(){
         let uri = 'band/ajax-recommendations/id/' + artistId;
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseRecommendations(htmlStr));
-        },reject).catch(reject);
+        }).catch(reject);
       });
     },
     getLyrics:function(songId){
@@ -379,7 +380,7 @@ var mod =  (function(){
         let uri = 'release/ajax-view-lyrics/id/' + songId;
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseLyrics(htmlStr));
-        },reject).catch(reject);
+        }).catch(reject);
       });
     },
     searchLabel:function(label,labelId){
@@ -390,7 +391,7 @@ var mod =  (function(){
         }
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseLabel(htmlStr));
-        },reject).catch(reject);
+        }).catch(reject);
       });
     },
     getLabelRoster:function(labelId,current){
@@ -403,7 +404,7 @@ var mod =  (function(){
         }
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseLabelRoster(JSON.parse(htmlStr.replace('"sEcho": ,','')),current));
-        },reject).catch(reject);
+        }).catch(reject);
       });
     }
   }

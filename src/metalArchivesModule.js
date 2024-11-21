@@ -4,14 +4,14 @@ var mod =  (function(){
   const artistPatterns = {
     artistId:/var\sbandId\s=\s([0-9]{1,20})/,
     artistName:/<h1 class="band_name"><a href=.*?>(.*?)<\/a>/,
-    countryOfOrigin:/<dt>Country of origin:<\/dt>\n\s?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
-    location:/<dt>Location:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
+    countryOfOrigin:/<dt>Country of origin:<\/dt>\n\s+?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
+    location:/<dt>Location:<\/dt>\n\s+?<dd>(.*?)<\/dd>/,
     status:/<dd class=".*?">(.*?)<\/dd>/,
-    formedIn:/<dt>Formed in:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
-    genre:/<dt>Genre:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
-    lyricalThemes:/<dt>Themes:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
-    recordLabel:/<dt>.*?label:<\/dt>\n\s?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
-    recordLabel2:/<dt>.*?label:<\/dt>\n\s?<dd>(.*?)<\/dd>/
+    formedIn:/<dt>Formed in:<\/dt>\n\s+?<dd>(.*?)<\/dd>/,
+    genre:/<dt>Genre:<\/dt>\n\s+?<dd>(.*?)<\/dd>/,
+    lyricalThemes:/<dt>Themes:<\/dt>\n\s+?<dd>(.*?)<\/dd>/,
+    recordLabel:/<dt>.*?label:<\/dt>\n\s+?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
+    recordLabel2:/<dt>.*?label:<\/dt>\n\s+?<dd>(.*?)<\/dd>/
   };
   const artistSearchPatterns = {
     artistId:/<a href=".*?\/([0-9]{1,20})/,
@@ -20,7 +20,6 @@ var mod =  (function(){
     location:/<\/strong>\sfrom\s(.*)/
   };
   const albumPatterns = {
-    //tracks_global:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n\s?<\/td>/g, //intentionally broken
     tracks_global:/([0-9]{1,3})\.<\/td>\n\s+?<td\sclass="wrapWords.*?">\n(.*?)\n\s+?<\/td>/g,
     track_inLine:/([0-9]{1,3})\.<\/td>\n\s+?<td\sclass="wrapWords.*?">\n(.*?)\n\s+?<\/td>/,
     songId_global:/<tr id="song(.*?)"/g,
@@ -66,12 +65,12 @@ var mod =  (function(){
     id:/javascript:popupReportDialog\([0-9]{1,3},\s([0-9]{1,20})/,
     name:/<h1 class="label_name">(.*?)<\/h1>/,
     address:/<dt>Address:<\/dt>\n<dd>(.*?)<br\s\/>\n(.*?)<br\s\/>\n(.*?)<\/dd>/,
-    country:/<dt>Country:<\/dt>\n<dd><a href=.*?>(.*?)<\/a>/,
-    phone:/<dt>Phone\snumber:<\/dt>\n<dd>(.*?)<\/dd>/,
-    status:/<dt>Status:<\/dt>\n<dd><span class=.*?>(.*?)<\/span><\/dd>/,
-    specialization:/<dt>Specialised in:<\/dt>\n<dd>(.*?)<\/dd>/,
-    founded:/<dt>Founding\sdate\s:<\/dt>\n<dd>(.*?)<\/dd>/,
-    onlineShopping:/<dt>Online\sshopping:<\/dt>\n<dd>(.*?)<\/dd>/,
+    country:/<dt>Country:<\/dt>\n\s+<dd><a href=.*?>(.*?)<\/a>/,
+    phone:/<dt>Phone\snumber:<\/dt>\n\s+<dd>(.*?)<\/dd>/,
+    status:/<dt>Status:<\/dt>\n\s+<dd><span class=.*?>(.*?)<\/span><\/dd>/,
+    specialization:/<dt>Styles\/specialties:<\/dt>\n\s+<dd>\n(.*?)<\/dd>/,
+    founded:/<dt>Founding\sdate\s:<\/dt>\n\s+<dd>(.*?)<\/dd>/,
+    onlineShopping:/<dt>Online\sshopping:<\/dt>\n\s+<dd>(.*?)<\/dd>/,
     website:/<a\shref="(.*?)"\starget="_blank"\stitle="Go\sto\s.*?website/
   };
   const labelRosterPatterns = {
@@ -145,12 +144,12 @@ var mod =  (function(){
     let results = {};
     results['id'] = htmlStr.match(artistPatterns.artistId)?.[1] ?? _throwMatchError('Artist.Id',artistPatterns.artistId);
     results['artist'] = htmlStr.match(artistPatterns.artistName)?.[1] ?? _throwMatchError('Artist.Artist',artistPatterns.artistName);
-    results['country'] = htmlStr.match(artistPatterns.countryOfOrigin)?.[1] ?? _throwMatchError('Artist.',artistPatterns.countryOfOrigin);
-    results['city'] = htmlStr.match(artistPatterns.location)?.[1] ?? _throwMatchError('Artist.',artistPatterns.location);
-    results['status'] = htmlStr.match(artistPatterns.status)?.[1] ?? _throwMatchError('Artist.',artistPatterns.status);
-    results['formed'] = htmlStr.match(artistPatterns.formedIn)?.[1] ?? _throwMatchError('Artist.',artistPatterns.formedIn);
-    results['genre'] = htmlStr.match(artistPatterns.genre)?.[1] ?? _throwMatchError('Artist.',artistPatterns.genre);
-    results['lyricalThemes'] = htmlStr.match(artistPatterns.lyricalThemes)?.[1] ?? _throwMatchError('Artist.',artistPatterns.lyricalThemes);
+    results['country'] = htmlStr.match(artistPatterns.countryOfOrigin)?.[1] ?? _throwMatchError('Artist.countryOfOrigin',artistPatterns.countryOfOrigin);
+    results['city'] = htmlStr.match(artistPatterns.location)?.[1] ?? _throwMatchError('Artist.location',artistPatterns.location);
+    results['status'] = htmlStr.match(artistPatterns.status)?.[1] ?? _throwMatchError('Artist.status',artistPatterns.status);
+    results['formed'] = htmlStr.match(artistPatterns.formedIn)?.[1] ?? _throwMatchError('Artist.formedIn',artistPatterns.formedIn);
+    results['genre'] = htmlStr.match(artistPatterns.genre)?.[1] ?? _throwMatchError('Artist.genre',artistPatterns.genre);
+    results['lyricalThemes'] = htmlStr.match(artistPatterns.lyricalThemes)?.[1] ?? _throwMatchError('Artist.lyricalThemes',artistPatterns.lyricalThemes);
     if(htmlStr.match(artistPatterns.recordLabel) === null){
       results['label'] = htmlStr.match(artistPatterns.recordLabel2)?.[1] ?? _throwMatchError('Artist.Label',artistPatterns.recordLabel2);
     }else{
@@ -272,16 +271,16 @@ var mod =  (function(){
   function _parseLabel(htmlStr){
     let result = {};
     let addressFields = htmlStr.match(labelPatterns.address);
-    result['id'] = htmlStr.match(labelPatterns.id)[1];
-    result['name'] = htmlStr.match(labelPatterns.name)[1];
+    result['id'] = htmlStr.match(labelPatterns.id)?.[1] ?? _throwMatchError('Label.Id',labelPatterns.id);
+    result['name'] = htmlStr.match(labelPatterns.name)?.[1] ?? _throwMatchError('Label.name',labelPatterns.name);
     // result['address'] = addressFields[1] + addressFields[2] + addressFields[3];
-    result['country'] = htmlStr.match(labelPatterns.country)[1];
-    result['phone'] = htmlStr.match(labelPatterns.phone)[1].trim();
-    result['status'] = htmlStr.match(labelPatterns.status)[1];
-    result['specialization'] = htmlStr.match(labelPatterns.specialization)[1].trim();
-    result['founded'] = htmlStr.match(labelPatterns.founded)[1].trim();
-    result['onlineShopping'] = htmlStr.match(labelPatterns.onlineShopping)[1];
-    result['website'] = htmlStr.match(labelPatterns.website)[1];
+    result['country'] = htmlStr.match(labelPatterns.country)?.[1] ?? _throwMatchError('Label.country',labelPatterns.country);
+    result['phone'] = htmlStr.match(labelPatterns.phone)?.[1].trim() ?? _throwMatchError('Label.phone',labelPatterns.phone);
+    result['status'] = htmlStr.match(labelPatterns.status)?.[1] ?? _throwMatchError('Label.status',labelPatterns.status);
+    result['specialization'] = htmlStr.match(labelPatterns.specialization)?.[1].trim() ?? _throwMatchError('Label.specialization',labelPatterns.specialization);
+    result['founded'] = htmlStr.match(labelPatterns.founded)?.[1].trim() ?? _throwMatchError('Label.founded',labelPatterns.founded);
+    result['onlineShopping'] = htmlStr.match(labelPatterns.onlineShopping)?.[1] ?? _throwMatchError('Label.onlineShopping',labelPatterns.onlineShopping);
+    result['website'] = htmlStr.match(labelPatterns.website)?.[1] ?? _throwMatchError('Label.website',labelPatterns.website);
     return result;
   }
   function _parseLabelRoster(labelRoster,current){
@@ -318,7 +317,9 @@ var mod =  (function(){
           }else{
             resolve(_parseArtistData(htmlStr));
           }
-        }).catch(reject);
+        }).catch((err)=>{
+          reject(err.message)
+        });
       });
     },
     searchAlbum:function(album,artist,albumId){
@@ -352,10 +353,8 @@ var mod =  (function(){
         let uri = 'search/ajax-song-search/?field=title&query=' + title.replace(/\s/g,"+");
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseSongResults(JSON.parse(htmlStr)));
-        },(err)=>{
-          reject(err);
         }).catch((err)=>{
-          reject(err);
+          reject(err.message);
         });
       });
     },
@@ -364,7 +363,9 @@ var mod =  (function(){
         let uri = 'band/discography/id/' + artistId + '/tab/all';
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseDiscography(htmlStr));
-        }).catch(reject);
+        }).catch((err)=>{
+          reject(err.message);
+        });
       });
     },
     getSimilarArtists:function(artistId){
@@ -372,7 +373,9 @@ var mod =  (function(){
         let uri = 'band/ajax-recommendations/id/' + artistId;
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseRecommendations(htmlStr));
-        }).catch(reject);
+        }).catch((err)=>{
+          reject(err.message);
+        });
       });
     },
     getLyrics:function(songId){
@@ -380,7 +383,9 @@ var mod =  (function(){
         let uri = 'release/ajax-view-lyrics/id/' + songId;
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseLyrics(htmlStr));
-        }).catch(reject);
+        }).catch((err)=>{
+          reject(err.message);
+        });
       });
     },
     searchLabel:function(label,labelId){
@@ -391,7 +396,9 @@ var mod =  (function(){
         }
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseLabel(htmlStr));
-        }).catch(reject);
+        }).catch((err)=>{
+          reject(err.message);
+        });
       });
     },
     getLabelRoster:function(labelId,current){
@@ -404,7 +411,9 @@ var mod =  (function(){
         }
         _apiRequest(uri).then((htmlStr)=>{
           resolve(_parseLabelRoster(JSON.parse(htmlStr.replace('"sEcho": ,','')),current));
-        }).catch(reject);
+        }).catch((err)=>{
+          reject(err.message);
+        });
       });
     }
   }

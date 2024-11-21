@@ -31,7 +31,7 @@ var mod =  (function(){
     releaseType:/<dt>Type:<\/dt>\n\s+?<dd>(.*?)<\/dd>/,
     releaseDate:/<dt>Release date:<\/dt>\n\s+?<dd>(.*?)<\/dd>/,
     recordLabel:/<dt>Label:<\/dt>\n\s+?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
-    independentLabel:/<dt>Label:<\/dt>\n<dd>(.*?)<\/dd>/
+    independentLabel:/<dt>Label:<\/dt>\n\s+<dd>(.*?)<\/dd>/
   };
   const albumSearchPatterns = {
     artist_album:/<a href=.*?>(.*?)<\/a>/,

@@ -20,17 +20,17 @@ var mod =  (function(){
     location:/<\/strong>\sfrom\s(.*)/
   };
   const albumPatterns = {
-    tracks_global:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n\s?<\/td>/g,
-    track_inLine:/([0-9]{1,3})\.<\/td>\n\s?<td\sclass="wrapWords.*?">\n(.*?)\n\s?<\/td>/,
+    tracks_global:/([0-9]{1,3})\.<\/td>\n\s+?<td\sclass="wrapWords.*?">\n(.*?)\n\s+?<\/td>/g,
+    track_inLine:/([0-9]{1,3})\.<\/td>\n\s+?<td\sclass="wrapWords.*?">\n(.*?)\n\s+?<\/td>/,
     songId_global:/<tr id="song(.*?)"/g,
     songId_inLine:/<tr id="song(.*?)"/,
     trackLength_global:/<td align="right">([0-9]{2}:[0-9]{2})<\/td>/g,
     trackLength_inLine:/<td align="right">([0-9]{2}:[0-9]{2})<\/td>/,
     albumId:/var\sreleaseId\s=\s([0-9]{1,20})/,
-    artist:/<h2\sclass="band_name">\n<a href=.*?>(.*?)<\/a>/,
-    releaseType:/<dt>Type:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
-    releaseDate:/<dt>Release date:<\/dt>\n\s?<dd>(.*?)<\/dd>/,
-    recordLabel:/<dt>Label:<\/dt>\n\s?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
+    artist:/<h2\sclass="band_name">\n\s+<a href=.*?>(.*?)<\/a>/,
+    releaseType:/<dt>Type:<\/dt>\n\s+?<dd>(.*?)<\/dd>/,
+    releaseDate:/<dt>Release date:<\/dt>\n\s+?<dd>(.*?)<\/dd>/,
+    recordLabel:/<dt>Label:<\/dt>\n\s+?<dd><a href=.*?>(.*?)<\/a><\/dd>/,
     independentLabel:/<dt>Label:<\/dt>\n<dd>(.*?)<\/dd>/
   };
   const albumSearchPatterns = {
@@ -171,16 +171,20 @@ var mod =  (function(){
   }
   function _parseAlbumData(htmlStr){
     let results = {};
-    results['id'] = htmlStr.match(albumPatterns.albumId)[1];
-    results['artist'] = htmlStr.match(albumPatterns.artist)[1];
-    results['releaseType'] = htmlStr.match(albumPatterns.releaseType)[1];
-    results['releaseDate'] = htmlStr.match(albumPatterns.releaseDate)[1];
-    if(htmlStr.match(albumPatterns.recordLabel)){
-      results['recordLabel'] = htmlStr.match(albumPatterns.recordLabel)[1];
-    }else{
-      results['recordLabel'] = htmlStr.match(albumPatterns.independentLabel)[1];
+    try{
+      results['id'] = htmlStr.match(albumPatterns.albumId)[1];
+      results['artist'] = htmlStr.match(albumPatterns.artist)[1];
+      results['releaseType'] = htmlStr.match(albumPatterns.releaseType)[1];
+      results['releaseDate'] = htmlStr.match(albumPatterns.releaseDate)[1];
+      if(htmlStr.match(albumPatterns.recordLabel)){
+        results['recordLabel'] = htmlStr.match(albumPatterns.recordLabel)[1];
+      }else{
+        results['recordLabel'] = htmlStr.match(albumPatterns.independentLabel)[1];
+      }
+      results['songs'] = _parseTracks(htmlStr);
+    }catch(err){
+      throw err.message;
     }
-    results['songs'] = _parseTracks(htmlStr);
     return results;
   }
   function _parseTracks(htmlStr){
@@ -188,7 +192,7 @@ var mod =  (function(){
     let lines = htmlStr.match(albumPatterns.tracks_global);
     for(i in lines){
       let track = lines[i].match(albumPatterns.track_inLine);
-      tracks.push({track_number:track[1],title:track[2]});
+      tracks.push({track_number:track[1],title:track[2].trim()});
     }
     lines = htmlStr.match(albumPatterns.songId_global);
     for(i in lines){

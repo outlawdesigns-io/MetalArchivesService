@@ -1,0 +1,10 @@
+version: '3.1'
+
+services:
+  backend:
+    image: metalarchivesserver-expressjs
+    build:
+      context: $DOCKER_BUILD_DIR/MetalArchivesService/
+      dockerfile: $DOCKER_BUILD_DIR/MetalArchivesService/Dockerfile
+    ports:
+      - '8690:8690'
